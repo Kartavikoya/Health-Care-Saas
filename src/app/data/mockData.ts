@@ -1,0 +1,113 @@
+import type {
+  AnalyticsPoint,
+  DepartmentLoad,
+  NotificationItem,
+  Patient,
+} from "../types/models";
+
+export const mockPatients: Patient[] = [
+  {
+    id: "PT-1042",
+    name: "John Doe",
+    age: 30,
+    condition: "Type 2 Diabetes",
+    status: "Stable",
+    room: "A-302",
+    physician: "Dr. Anika Rao",
+    riskLevel: "Medium",
+    adherence: 88,
+    nextAppointment: "2026-05-02 10:30",
+    lastVisit: "2026-04-25",
+  },
+  {
+    id: "PT-1078",
+    name: "Jane Smith",
+    age: 25,
+    condition: "Asthma Monitoring",
+    status: "Recovering",
+    room: "B-118",
+    physician: "Dr. Marcus Li",
+    riskLevel: "Low",
+    adherence: 94,
+    nextAppointment: "2026-05-03 15:00",
+    lastVisit: "2026-04-26",
+  },
+  {
+    id: "PT-1099",
+    name: "Samuel Carter",
+    age: 58,
+    condition: "Cardiac Rehabilitation",
+    status: "Critical",
+    room: "ICU-07",
+    physician: "Dr. Elena Perez",
+    riskLevel: "High",
+    adherence: 62,
+    nextAppointment: "2026-04-30 08:30",
+    lastVisit: "2026-04-28",
+  },
+  {
+    id: "PT-1121",
+    name: "Ava Thompson",
+    age: 41,
+    condition: "Post-operative Recovery",
+    status: "Recovering",
+    room: "C-214",
+    physician: "Dr. Nikhil Sharma",
+    riskLevel: "Medium",
+    adherence: 79,
+    nextAppointment: "2026-05-01 11:15",
+    lastVisit: "2026-04-27",
+  },
+  {
+    id: "PT-1160",
+    name: "Mia Johnson",
+    age: 67,
+    condition: "Hypertension",
+    status: "Stable",
+    room: "D-121",
+    physician: "Dr. Sarah Kim",
+    riskLevel: "Low",
+    adherence: 91,
+    nextAppointment: "2026-05-05 09:00",
+    lastVisit: "2026-04-23",
+  },
+  {
+    id: "PT-1183",
+    name: "Noah Williams",
+    age: 52,
+    condition: "Renal Care",
+    status: "Critical",
+    room: "ICU-03",
+    physician: "Dr. Omar Hassan",
+    riskLevel: "High",
+    adherence: 58,
+    nextAppointment: "2026-04-30 13:45",
+    lastVisit: "2026-04-28",
+  },
+];
+
+export const monthlyAdmissions: AnalyticsPoint[] = [
+  { month: "Jan", admissions: 118, discharges: 101, satisfaction: 84 },
+  { month: "Feb", admissions: 132, discharges: 112, satisfaction: 86 },
+  { month: "Mar", admissions: 128, discharges: 119, satisfaction: 87 },
+  { month: "Apr", admissions: 149, discharges: 130, satisfaction: 89 },
+  { month: "May", admissions: 162, discharges: 141, satisfaction: 90 },
+  { month: "Jun", admissions: 156, discharges: 148, satisfaction: 92 },
+];
+
+export const departmentLoad: DepartmentLoad[] = [
+  { name: "Cardiology", utilization: 82, target: 75 },
+  { name: "Pulmonology", utilization: 68, target: 72 },
+  { name: "Nephrology", utilization: 77, target: 74 },
+  { name: "Rehab", utilization: 63, target: 65 },
+];
+
+export const starterNotifications: NotificationItem[] = [
+  {
+    id: "NT-1",
+    title: "Morning triage huddle",
+    body: "Review three high-risk patients before 09:30 rounds.",
+    createdAt: "08:15",
+    targetPath: "/patients",
+  },
+];
