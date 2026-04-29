@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MetricCard from "../../components/MetricCard";
 import StatusBadge from "../../components/StatusBadge";
 import { useNotificationCenter } from "../../hooks/useNotificationCenter";
@@ -9,6 +10,7 @@ export default function Dashboard() {
   const patients = useStore((state) => state.patients);
   const notifications = useStore((state) => state.notifications);
   const { sendLocalNotification } = useNotificationCenter();
+  const navigate = useNavigate();
 
   const activeCases = patients.filter(
     (patient) => patient.status !== "Recovering",
@@ -140,9 +142,11 @@ export default function Dashboard() {
           </h3>
           <div className="mt-6 space-y-4">
             {notifications.map((item) => (
-              <div
+              <button
                 key={item.id}
-                className="rounded-3xl border border-slate-200 bg-white p-4"
+                type="button"
+                onClick={() => navigate(item.targetPath)}
+                className="w-full rounded-3xl border border-slate-200 bg-white p-4 text-left transition hover:border-cyan-300 hover:bg-cyan-50"
               >
                 <div className="flex items-center justify-between gap-4">
                   <p className="text-sm font-semibold text-slate-900">
@@ -153,7 +157,7 @@ export default function Dashboard() {
                 <p className="mt-2 text-sm leading-6 text-slate-500">
                   {item.body}
                 </p>
-              </div>
+              </button>
             ))}
           </div>
         </article>

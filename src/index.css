@@ -45,6 +45,10 @@ a {
   text-decoration: none;
 }
 
+.w-6 {
+  height: 49px;
+  width: 50px;
+}
 button,
 input,
 select {

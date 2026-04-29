@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import StatusBadge from "./StatusBadge";
@@ -22,15 +22,27 @@ const pageTitles: Record<string, string> = {
 export default function AppShell() {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const user = useStore((state) => state.user);
-  const patients = useStore((state) => state.patients);
   const notifications = useStore((state) => state.notifications);
   const { notificationPermission, requestPermission } = useNotificationCenter();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const highRiskCount = patients.filter(
-    (patient) => patient.riskLevel === "High",
-  ).length;
+  useEffect(() => {
+    const handleServiceWorkerMessage = (event: MessageEvent) => {
+      if (event.data?.type === "OPEN_ROUTE" && event.data.targetPath) {
+        navigate(event.data.targetPath);
+      }
+    };
+
+    navigator.serviceWorker?.addEventListener("message", handleServiceWorkerMessage);
+
+    return () => {
+      navigator.serviceWorker?.removeEventListener(
+        "message",
+        handleServiceWorkerMessage,
+      );
+    };
+  }, [navigate]);
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
@@ -47,16 +59,12 @@ export default function AppShell() {
     <div className="min-h-screen lg:grid lg:grid-cols-[280px_minmax(0,1fr)]">
       <aside className="border-b border-white/50 bg-slate-950 px-6 py-8 text-white lg:border-b-0 lg:border-r lg:border-slate-800">
         <div className="flex items-center justify-between lg:block">
-          <div>
-            <img src={logo} alt="Logo" />
-            <span className="text-sm uppercase tracking-[0.3em] text-cyan-300">
+          <div className="flex items-center gap-2">
+            <img src={logo} alt="Logo" className="h-6 w-6" />
+            <span className="text-sm uppercase tracking-[0.3em] text-cyan-300" style={{ marginLeft: "0.5rem" }}>
               Healthify
             </span>
           </div>
-          <StatusBadge
-            label={`${highRiskCount} high risk`}
-            tone={highRiskCount > 1 ? "critical" : "warning"}
-          />
         </div>
 
         <nav className="mt-8 flex gap-3 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible">
@@ -142,12 +150,14 @@ export default function AppShell() {
             </div>
             <div className="flex flex-wrap gap-2">
               {notifications.slice(0, 2).map((notification) => (
-                <div
+                <button
                   key={notification.id}
-                  className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs text-slate-600 shadow-sm"
+                  type="button"
+                  onClick={() => navigate(notification.targetPath)}
+                  className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs text-slate-600 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50"
                 >
                   {notification.createdAt} - {notification.title}
-                </div>
+                </button>
               ))}
             </div>
           </div>

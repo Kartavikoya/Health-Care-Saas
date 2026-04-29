@@ -12,16 +12,34 @@ self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
   event.waitUntil(
-    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
+    (async () => {
+      const clients = await self.clients.matchAll({
+        type: "window",
+        includeUncontrolled: true,
+      });
       const targetUrl = new URL(targetPath, self.location.origin).href;
+      const appClient = clients.find((client) =>
+        client.url.startsWith(self.location.origin),
+      );
 
-      for (const client of clients) {
-        if ("navigate" in client) {
-          return client.navigate(targetUrl).then((windowClient) => windowClient?.focus());
+      if (appClient) {
+        if ("navigate" in appClient) {
+          await appClient.navigate(targetUrl);
         }
+
+        appClient.postMessage({
+          type: "OPEN_ROUTE",
+          targetPath,
+        });
+
+        if ("focus" in appClient) {
+          await appClient.focus();
+        }
+
+        return;
       }
 
-      return self.clients.openWindow(targetUrl);
-    }),
+      await self.clients.openWindow(targetUrl);
+    })(),
   );
 });
